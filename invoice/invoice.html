@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        .middle {
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: auto;
+            top: 15%;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container ">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4 jumbotron middle">
+                <!-- <form> -->
+                <div class="form-group">
+                    <label for="name">Customer Name:</label>
+                    <input type="text" class="form-control" disabled style="text-transform:capitalize"
+                        id="name" placeholder="Customer Name">
+                </div>
+                <!-- 				<div class="form-group">
+						<label for="jdate">D.O.J:</label> <input type="date"
+							class="form-control" id="jdate">
+					</div>
+					<div class="form-group">
+						<label for="rdate">D.O.R:</label> <input type="date"
+							class="form-control" id="rdate">
+					</div> -->
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <input type="text" class="form-control" disabled  id="address"
+                        placeholder="Address">
+                </div>
+
+                <div class="form-group">
+                    <label for="po">PO Agreement #:</label>
+                    <input type="text" class="form-control" disabled 
+                        id="po" placeholder="PO Agreement #">
+                </div>
+                <div class="form-group">
+                    <label for="jdate">Period:</label>
+                    <input type="text" class="form-control" disabled id="period">
+                </div>
+                <div class="form-group">
+                    <label for="jdate">Invoice Date:</label>
+                    <input type="date" class="form-control" id="invoiceDate">
+                </div>
+                <div class="form-group">
+                    <label for="invoiceNumber">Invoice #:</label>
+                    <input type="text" class="form-control" disabled 
+                        id="invoiceNumber" placeholder="Invoice Number">
+                </div>
+                <div class="form-group">
+                    <label for="invoiceDue">Invoice Due:</label>
+                    <input type="text" class="form-control"  id="invoiceDue"
+                        placeholder="Invoice Due">
+                </div>
+
+                <div class="form-group">
+                    <label for="invoiceDue">Amount:</label>
+                    <input type="text" class="form-control"  id="amount"
+                        placeholder="Amount">
+                </div>
+                <button type="submit" onclick="submitInvoice()" class="btn btn-success btn-block" onclick="gernateReleseLetter()">Submit</button>
+                <!-- 	</form> -->
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var service = 'http://localhost:8080';
+
+
+
+    $(document).ready(function () {
+        var custId = localStorage.getItem("custId");
+        var invoiceDate ;
+        $.ajax(
+            {
+                type: "GET",
+                url: 'http://127.0.0.1:8080/getSingleCustomer/' + custId,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    console.log(data.response_body)
+                    $("#name").val(data.response_body.customerName);
+                    $("#address").val(data.response_body.custAddress);
+                    $("#po").val(data.response_body.poagreement);
+                    var fullDate = new Date(data.response_body.period)
+                    var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1) ? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
+                    invoiceDate =  new Date(data.response_body.period);
+                    var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+                    $("#period").val(currentDate);
+                    $("#invoiceNumber").val(data.response_body.invoiceNumber);
+                },
+
+                error: function (msg) {
+
+                    alert(msg.responseText);
+                }
+            });
+    })
+    
+    function submitInvoice(){
+        var custId = localStorage.getItem("custId");
+        $.ajax(
+            {
+                type: "POST",
+                url: 'http://127.0.0.1:8080/saveinvoice/' + custId,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    "invoiceDate":$("#invoiceDate").val(),
+                    "invoiceNumber":$("#invoiceNumber").val(),
+                    "invoiceDue":$("#invoiceDue").val(),
+                    "amount":$("#amount").val(),
+
+                }),
+                success: function (data) {
+                    alert(data.response_message)
+                 window.location.href= "viewinvoice.html";
+                },
+
+                error: function (msg) {
+
+                    alert(msg.responseText);
+                }
+            });
+    }
+
+</script>
+
+</html>

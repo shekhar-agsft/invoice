@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Customer List</h2>
+
+        <table class="table" id="location">
+            <thead>
+                <tr>
+                    <th>Invoice Number</th>
+                    <th>Invoice Date</th>
+                    <th>Amount</th>
+                    <th>Invoice Due</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+        </table>
+        <!--  <button type="button" class="btn btn-default">Export</button> -->
+
+    </div>
+
+    <button type="button" class="btn btn-info btn-lg" style="display: none" id="openmodal" data-toggle="modal" data-target="#myModal">Add Project</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Project</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Project Name:</label>
+                        <input type="text" class="form-control" style="text-transform:capitalize" id="pname" placeholder="Project Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Project Resources:</label>
+                        <input type="text" class="form-control" style="text-transform:capitalize" id="resources" placeholder="Project Resources">
+                    </div>
+                    <div class="form-group">
+                        <label for="jdate">Period:</label>
+                        <input type="date" class="form-control" id="period">
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Type:</label>
+                        <input type="text" class="form-control" style="text-transform:capitalize" id="type" placeholder="Type">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Amount Billed:</label>
+                        <input type="text" class="form-control" style="text-transform:capitalize" id="amount" placeholder="Amount Billed">
+                    </div>
+
+                    <div class="form-group">
+
+                        <button type="button" class="btn btn-primary" onclick="saveProject()">Save changes</button>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closemodal" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+<script>
+    var service = 'http://localhost:8080';
+
+
+    var invoiceId;
+    $(document).ready(function () {
+        var custId = localStorage.getItem("custId");
+        $.ajax(
+            {
+                type: "GET",
+                url: 'http://127.0.0.1:8080/getInvoiceForCustomer/' + custId,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    console.log(data.response_body.invoices)
+
+                    for (var i = 0; i < data.response_body.length; i++) {
+                        var invoice = data.response_body[i];
+                        $('#location').append('<tr>');
+                        $('#location').append('<td>' + invoice.invoiceNumber + '</td>   ');
+                        var fullDate = new Date(invoice.invoiceDate)
+                        var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1) ? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
+                        invoiceDate = new Date(invoice.invoiceDate);
+                        var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+                        $('#location').append('<td>' + currentDate + '</td>   ');
+                        $('#location').append('<td>' + invoice.amount + '</td>   ');
+                        $('#location').append('<td>' + invoice.invoiceDue + '</td>   ');
+                        // $('#location').append('<td>' + cust.period + '</td>   ');
+                        $('#location').append('<td> <button onclick="addProject(' + invoice.invoiceId + ',' + invoice.invoiceNumber + ')">Add Details</button></td>   ');
+                        $('#location').append('</tr>');
+                    }
+                },
+
+                error: function (msg) {
+
+                    alert(msg.responseText);
+                }
+            });
+    })
+
+    function addProject(id,invoiceNumber) {
+        invoiceId = id;
+         localStorage.setItem("invoiceId",invoiceNumber);
+        $("#openmodal").click();
+        //window.location.href ="project.html";
+    }
+    function saveProject() {
+
+
+        var formData = {
+            projectName: $("#pname").val(),
+            resources: $("#resources").val(),
+            type: $("#type").val(),
+            period: $("#period").val(),
+            amountBilled: $("#amount").val(),
+
+        }
+
+
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            type: 'POST',
+            url: 'http://127.0.0.1:8080/saveprojects/' + invoiceId,
+            dataType: "json",
+            data: JSON.stringify(formData),
+            async: false,
+            success: function (data) {
+                console.log(JSON.stringify(data.response_body));
+
+                if (data.response_code == 200) {
+                    alert(data.response_message)
+                    $("#closemodal").click();
+                    //window.location = "http://127.0.0.1:5500/viewcustomers.html";
+                    return false;
+                } else {
+                    alert(data.response_message)
+                  //  window.location = "http://127.0.0.1:5500/viewcustomers.html";
+                    return false;
+                }
+            },
+            error: function () {
+           //     window.location = "http://127.0.0.1:5500/home.html"
+            }
+        });
+
+    }
+
+
+
+</script>
+
+</html>
