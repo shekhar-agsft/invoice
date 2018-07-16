@@ -5,322 +5,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <title>Document</title>
     <style>
-        .invoice-header {
-            height: 65px;
-            background-color: #00cdcd;
-        }
-
-        .header-text {
-            font-size: 35px;
-            font-weight: bold;
+        .text-center {
             text-align: center;
             color: #fff;
+            background-color: #00cdcd
         }
 
-        .invoice-logo {
-            height: 85px;
-            background-color: #fff;
+        .header {
+            height: 50px;
+            line-height: 46px;
+            font-size: 31px;
         }
 
-        .logo {
-            height: 100px;
-            padding-left: 135px;
+        .image {
+            height: 110px
         }
 
-        .org-address {
-            height: 155px;
-
+        .tble-header {
+            color: #fff;
+            background-color: #00cdcd
         }
 
-        .add-heading {
-            text-align: justify;
-            padding-left: 100px;
-
+        .tble-body {
+            background-color: yellow;
         }
 
-        .add-to {
-            text-align: right;
-        }
-
-        .project-table {}
-
-        .first-head {
+        .bank {
             font-size: 20px;
             font-weight: bold;
-            margin-bottom: 0
         }
 
-        .sec-head {
-            margin-top: 0;
-            margin-bottom: 0;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            font-size: 20px;
+        .bank-details {
+            color: #fff;
+            background-color: #00cdcd
         }
 
-        .third-head {
-            margin-top: 0;
-            margin-bottom: 0;
-            font-size: 20px;
-        }
-
-        .fourth-head {
-            margin-top: 0;
-            margin-bottom: 0;
-        }
-
-        .fifth-head {
-            margin-top: 0;
-            margin-bottom: 0;
-        }
-
-        .first-span {
-            position: absolute;
-            right: 216px
-        }
-
-        .sec-address {
-            position: absolute;
-            right: 137px
-        }
-
-        .third-span {
-            position: absolute;
-            right: 199px
-        }
-
-        .to {
-            text-align: right;
-            padding-right: 302px;
-            font-size: 20px;
-            margin-top: 0;
-            margin-bottom: 0
-        }
-
-        .agreement {
-            height: 132px;
-
-            padding-left: 175px;
-        }
-
-        .invoice-date {
-            text-align: right;
-            padding-right: 243px
-        }
-
-        .invoice {
-            text-align: right;
-            padding-right: 264px
-        }
-
-        .invice-amt {
-            position: absolute;
-            right: 216px
-        }
-
-        .invoice-due {
-            position: absolute;
-            right: 249px
-        }
-
-        .pro-table {
-            height: 100px;
-
-        }
-
-        .div-table {
-            display: table;
-    width: auto;
-    background-color: #000;
-    border: 1px solid #666666;
-    border-spacing: 1px;
-    margin-left: 93px;
-    margin-top: 55px;
-        }
-
-        .div-table-row {
-            display: table-row;
-            width: auto;
-            clear: both;
-        }
-
-        .div-table-col {
-            float: left;
-            /* fix for  buggy browsers */
-            display: table-column;
-            width: 200px;
-            background-color: #f9ff06;
-            height: 32px;
-            font-size: 20px;
-            ;
-
-        }
-
-        .agreement {
-            font-size: 20px
-        }
-        .second-table{
-            
+        .btn-custom {
+            float: right;
+            margin-top: 7px;
+            border-radius: 0;
+            box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="invoice-header">
-            <div class="header-text">
-                INVOICE
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="header">
+                    <label>INVOICE </label>
+                    <button class="btn btn-warning btn-custom" type="button" onclick="exportData()">Export</button>
+                </div>
+                <div>
+
+                </div>
             </div>
         </div>
-        <div class="invoice-logo">
-            <img src="logo.jpeg" class="logo">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="/images/agile.jpeg" class="image">
+            </div>
+            <div class="col-md-6">
+                <label style="    padding-top: 75px;">Bill To</label>
+            </div>
         </div>
-        <div class="org-address">
-            <div class="add-heading">
-                <p class="to">Bill To</p>
-                <p class="first-head">
-                    <span>Agile Soft Systmes, Inc</span>
-                    <span class="first-span" id="name"></span>
+        <div class="row">
+            <div class="col-md-6">
+                <p>
+                    <label>Agile Soft Systems, Inc</label>
+                </p>
+                <p>
+                    <label>38930 Blacow Rd Ste B3</label>
+                </p>
+                <p>
+                    <label>Fremont, CA 94536</label>
+                </p>
+            </div>
+            <div class="col-md-6">
+                <p class="tble-body">
+                    <label id="name"></label>
+                </p>
+                <p class="tble-body">
+                    <label id="address1"></label>
                 </p>
 
-                <p class="sec-head">
-                    <span>38930 Blacow Rd Ste B3</span>
-                    <span class="sec-address" id ="address1">5425 Airport Blvd, Ste 100</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+
+            </div>
+            <div class="col-md-4">
+                <p> PO/Agreement #:
+                    <span class="tble-body" id="poagreement">Dt 7/7/17</span>
                 </p>
-                <p class="third-head">
-                    <span>Fremont, CA 94536</span>
-                  <!--   <spna class="third-span" id= "address2">Boulder, CO 80301</spna> -->
+                <p>Period:
+                    <span class="tble-body" id="period">Jan 2018</span>
                 </p>
-
             </div>
-
-
-        </div>
-        <div class="agreement">
-            <p class="invoice-date" > Invoice Date :
-
-                <span id ="invoicedate"></span>
-            </p>
-            <p class="invoice">Invoice #:
-
-                <span id ="invoicenumber"></span>
-
-            </p>
-            <p class="po">
-                <span>PO/Agreement #:</span>
-                <span id="poagreement"></span>
-                <spn class="invice-amt">Invoice Amount:<span id="amount"></span></spn>
-                
-            </p>
-            <p class="peroid">
-                <span>Period:</span>
-                <span id="period"></span>
-                <span class="invoice-due">Invoice Due:<span id="invoicedue"></span></span>
-            </p>
-        </div>
-
-        <div class="pro-table">
-            <div class="div-table">
-                <div class="div-table-row">
-                    <div class="div-table-col" style="font-weight: bold">Project</div>
-                    <div class="div-table-col" style="background-color: #00cdcd;font-weight: bold;color:#fff">Resource</div>
-                    <div class="div-table-col" style="background-color: #00cdcd;font-weight: bold;color:#fff">Period</div>
-                    <div class="div-table-col" style="background-color: #00cdcd;font-weight: bold;color:#fff">Type</div>
-                    <div class="div-table-col" style="background-color: #00cdcd;font-weight: bold;color:#fff">Amt Billed</div>
-                </div>
-                <div class="div-table-row" id="location">
-                    <div class="div-table-col">BackEnd Dev</div>
-                    <div class="div-table-col">Dev</div>
-                    <div class="div-table-col">Jan 2018</div>
-                    <div class="div-table-col">Full</div>
-                    <div class="div-table-col">$100.00</div>
-                </div>
-                <div class="div-table-row">
-                    <div class="div-table-col">BackEnd Dev</div>
-                    <div class="div-table-col">Dev</div>
-                    <div class="div-table-col">Jan 2018</div>
-                    <div class="div-table-col">Full</div>
-                    <div class="div-table-col">$100.00</div>
-                </div>
-                <div class="div-table-row">
-                    <div class="div-table-col">Web Dev</div>
-                    <div class="div-table-col">Dev</div>
-                    <div class="div-table-col">Jan 2018</div>
-                    <div class="div-table-col">Full</div>
-                    <div class="div-table-col">$100.00</div>
-                </div>
-
+            <div class="col-md-6">
+                <p>Invoice Date:
+                    <span class="tble-body" id="invoicedate">02/01/2018</span>
+                </p>
+                <p>Invoice #:
+                    <span class="tble-body" id="invoicenumber">WE1801</span>
+                </p>
+                <p>Invoice Amount:
+                    <span class="tble-body" id="amount">$550</span>
+                </p>
+                <p>Invoice Due:
+                    <span>On receipt</span>
+                </p>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="location">
+                        <thead class="tble-header">
+                            <tr>
+                                <th>Project</th>
+                                <th>Resources</th>
+                                <th>Period</th>
+                                <th>Type</th>
+                                <th>Amt Bill</th>
+                            </tr>
+                        </thead>
 
-        <div class="pro-table second-table">
-                <div class="div-table">
-                    <div class="div-table-row">
-                        <div class="div-table-col" style="font-weight: bold;background-color: #00cdcd;color: #fff">Total Invoice</div>
-                        <div class="div-table-col" style="background-color: #fff;font-weight: bold;color:#fff"></div>
-                        <div class="div-table-col" style="background-color: #fff;font-weight: bold;color:#fff"></div>
-                        <div class="div-table-col" style="background-color: #fff;font-weight: bold;color:#fff"></div>
-                        <div class="div-table-col" style="background-color: #fff;font-weight: bold;color:#000">$550</div>
-                    </div>
-               
-    
+
+
+                    </table>
                 </div>
             </div>
-
-            <div class="pro-table third-table">
-                    <div class="div-table">
-                        <div class="div-table-row">
-                            <div class="div-table-col" style="font-weight: bold;background-color: #fff;color: #000;width: 300px">Pay through Wells Fargo Bank:</div>
-                            <div class="div-table-col" style="background-color: #fff;font-weight: bold;color:#fff"></div>
-                            <div class="div-table-col" style="background-color: #fff;font-weight: bold;color:#fff"></div>
-                            <div class="div-table-col" style="background-color: #fff;font-weight: bold;color:#fff"></div>
-                            <div class="div-table-col" style="background-color: #fff;font-weight: bold;color:#fff"></div>
-                        </div>
-
-                        <div class="div-table-row" style="background: #fff">
-                                <div class="div-table-col" style="width: 300px;background: #fff">Agile Soft Systems, Inc</div>
- 
-                            </div>
-                            <div class="div-table-row" style="background: #fff">
-                                <div class="div-table-col" style="width: 300px;background: #fff">38930 Blacow Rd Ste B3</div>
-                                <div class="div-table-col" style="background: #fff"></div>
-                                <div class="div-table-col" style="background: #fff"></div>
-                                <div class="div-table-col" style="background: #fff"></div>
-                                <div class="div-table-col" style="background: #fff"></div>
-                            </div>
-                            <div class="div-table-row" style="background: #fff">
-                                <div class="div-table-col" style="width: 300px;background: #fff">Fremont, CA 94536</div>
-                                <div class="div-table-col" style="background: #fff"></div>
-                                <div class="div-table-col" style="background: #fff"></div>
-                                <div class="div-table-col" style="background: #fff"></div>
-                                <div class="div-table-col" style="background: #fff"></div>
-                            </div>
-                            <div class="div-table-row" style="background: #fff">
-                                    <div class="div-table-col" style="width: 300px;background: #00cdcd;color: #fff">Wells Fargo Bank Acct #</div>
-                                    <div class="div-table-col" style="background: #fff;text-align: center">123456789</div>
-                                    <div class="div-table-col" style="background: #fff"></div>
-                                    <div class="div-table-col" style="background: #fff"></div>
-                                    <div class="div-table-col" style="background: #fff"></div>
-                                </div>
-                                <div class="div-table-row" style="background: #fff">
-                                        <div class="div-table-col" style="width: 300px;background: #00cdcd;color: #fff">ABA #</div>
-                                        <div class="div-table-col" style="background: #fff;text-align: center">12345678</div>
-                                        <div class="div-table-col" style="background: #fff"></div>
-                                        <div class="div-table-col" style="background: #fff"></div>
-                                        <div class="div-table-col" style="background: #fff"></div>
-                                    </div>
-                   
-        
-                    </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <p class="bank"> Pay through Wells Fargo Bank:</p>
+                                    <p>Agile Soft Systems, Inc</p>
+                                    <p>38930 Blacow Rd Ste B3</p>
+                                    <p>Fremont, CA 94536</p>
+                                    <p class="bank-details">Wells Fargo Bank Acct #
+                                        <span id="accountNo">123456789</span>
+                                    </p>
+                                    <p class="bank-details">ABA #
+                                        <span id="abcno">12345678</span>
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
+            </div>
+        </div>
     </div>
 </body>
+
+
 <script>
     var service = 'http://localhost:8080';
 
@@ -332,48 +187,52 @@
         $.ajax(
             {
                 type: "GET",
-                url: 'http://127.0.0.1:8080/getCustomerDetails/'+custId+"/"+invoiceId,
+                url: 'http://127.0.0.1:8080/getCustomerDetails/' + custId + "/" + invoiceId,
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
                     console.log(data.response_body)
 
                     // for (var i = 0; i < data.response_body.customers.length; i++) {
-                        var cust = data.response_body;
-                        var cdata = data.response_body;
-                       
-                        $("#name").text(cust.name);
-                        $("#address1").text(cust.address);
+                    var cust = data.response_body;
+                    var cdata = data.response_body;
 
-                        var fullDate = new Date(cust.invoiceDate)
+                    $("#name").text(cust.name);
+                    $("#address1").text(cust.address);
+
+                    var fullDate = new Date(cust.invoiceDate)
                     var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1) ? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
-                    invoiceDate =  new Date(cust.invoiceDate);
+                    invoiceDate = new Date(cust.invoiceDate);
                     var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
-                        $("#invoicedate").text(currentDate);
-                        $("#invoicenumber").text(cust.invoiceNumber);
-                        $("#poagreement").text(cust.poagreement);
-                        $("#amount").text(cust.amount);
-                        $("#period").text(new Date());
-                        $("#invoicedue").text(cust.invoiceDue);
+                    $("#invoicedate").text(currentDate);
+                    $("#invoicenumber").text("WE" + cust.invoiceNumber);
+                    $("#poagreement").text(cust.poagreement);
+                    $("#amount").text("$" + cust.amount);
+                    $("#period").text(new Date());
+                    $("#invoicedue").text(cust.invoiceDue);
+                    var totalInvoice = 0.0;
 
-
-                       /*  $('#location').append('<tr>');
-                        $('#location').append('<td>' + cust.name + '</td>   ');
-                        $('#location').append('<td>' + cust.address + '</td>   ');
-                        $('#location').append('<td>' + cust.poagreement + '</td>   ');
-
-                        $('#location').append('<td>' + cdata.invoiceNumber + '</td>   ');
-                        $('#location').append('<td>' + cdata.invoiceDate + '</td>   ');
-                        $('#location').append('<td>' + cdata.amount + '</td>   ');
-                        $('#location').append('<td>' + cdata.invoiceDue + '</td>   ');
- */
-                     /*    $('#location').append('<td>' + cust.address + '</td>   ');
-                        $('#location').append('<td>' + cust.poagreement + '</td>   ');
-                        $('#location').append('<td>' + cust.name + '</td>   ');
-                        $('#location').append('<td>' + cust.address + '</td>   ');
-                        $('#location').append('<td>' + cust.poagreement + '</td>   '); */
-                        // $('#location').append('<td>' + cust.period + '</td>   ');
-                       // $('#location').append('<td> <button onclick="addInvoice('+cust.custId+')">Add Invoice</button></td>   ');
+                    for (var i = 0; i < cust.invoiceProjectDetails.length; i++) {
+                        $('#location').append('<tr>');
+                        $('#location').append('<td>' + cust.invoiceProjectDetails[i].projectName + '</td>');
+                        $('#location').append('<td>' + cust.invoiceProjectDetails[i].resources + '</td>');
+                        $('#location').append('<td>' + cust.invoiceProjectDetails[i].period + '</td>');
+                        $('#location').append('<td>' + cust.invoiceProjectDetails[i].type + '</td>');
+                        $('#location').append('<td>$' + cust.invoiceProjectDetails[i].amountBilled + '</td>');
                         $('#location').append('</tr>');
+                        totalInvoice = totalInvoice + cust.invoiceProjectDetails[i].amountBilled;
+
+                    }
+
+                    $('#location').append('<tr>');
+                    $('#location').append('<td class="tble-header">Total Invoice</td>');
+                    $('#location').append('<td></td>');
+                    $('#location').append('<td></td>');
+                    $('#location').append('<td></td>');
+                    $('#location').append('<td>' + "$" + totalInvoice + '</td>');
+                    $('#location').append('</tr>');
+                    $('#accountNo').text(cust.accountDetails.accountNumber);
+                    $('#abcno').text(cust.accountDetails.infoNumber);
+
                     // }
                 },
 
@@ -384,11 +243,37 @@
             });
     })
 
-   function addInvoice(custId){
-        localStorage.setItem("custId",custId);
-        window.location.href ="invoice.html";
+    function addInvoice(custId) {
+        localStorage.setItem("custId", custId);
+        window.location.href = "invoice.html";
     }
 
+    function exportData() {
+
+        var custId = localStorage.getItem("custId");
+        var invoiceId = localStorage.getItem("invoiceId");
+        $.ajax(
+            {
+                type: "GET",
+                url: 'http://127.0.0.1:8080/export/' + custId + "/" + invoiceId,
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    console.log(data.response_body)
+                    var a = document.createElement('a');
+                    var url = window.URL.createObjectURL(data);
+                    a.href = url;
+                    a.download = name + '.pdf';
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+
+                }
+            });
+
+
+    }
 
 </script>
 
