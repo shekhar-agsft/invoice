@@ -22,7 +22,9 @@
                     <th>Invoice Date</th>
                     <th>Amount</th>
                     <th>Invoice Due</th>
-                    <th>Action</th>
+                    <th>Add details</th>
+                     <th>View details</th>
+
                 </tr>
             </thead>
 
@@ -109,7 +111,9 @@
                         $('#location').append('<td>' + invoice.amount + '</td>   ');
                         $('#location').append('<td>' + invoice.invoiceDue + '</td>   ');
                         // $('#location').append('<td>' + cust.period + '</td>   ');
-                        $('#location').append('<td> <button onclick="addProject(' + invoice.invoiceId + ',' + invoice.invoiceNumber + ')">Add Details</button></td>   ');
+                        $('#location').append('<td> <button onclick="addProject(' + invoice.invoiceId + ',' + invoice.invoiceNumber + ')">Add</button></td>   ');
+                        $('#location').append('<td> <button onclick="viewProject()">View</button></td>   ');
+
                         $('#location').append('</tr>');
                     }
                 },
@@ -168,6 +172,9 @@
 
     }
 
+    function viewProject() {
+        window.location = "http://127.0.0.1:5500/project.html"
+    }
 
 
 </script>

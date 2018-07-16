@@ -34,6 +34,8 @@
             </thead>
 
         </table>
+
+       
        <!--  <button type="button" class="btn btn-default">Export</button> -->
 
     </div>
@@ -53,20 +55,20 @@
                 url: 'http://127.0.0.1:8080/getCustomerDetails/'+custId+"/"+invoiceId,
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
-                    console.log(data.response_body.customers)
+                    console.log(data.response_body)
 
                     // for (var i = 0; i < data.response_body.customers.length; i++) {
-                        var cust = data.response_body.customer;
+                        var cust = data.response_body;
                         var cdata = data.response_body;
                         $('#location').append('<tr>');
                         $('#location').append('<td>' + cust.name + '</td>   ');
                         $('#location').append('<td>' + cust.address + '</td>   ');
                         $('#location').append('<td>' + cust.poagreement + '</td>   ');
 
-                        $('#location').append('<td>' + cdata.projectInvoices.invoice.invoiceNumber + '</td>   ');
-                        $('#location').append('<td>' + cdata.projectInvoices.invoice.invoiceDate + '</td>   ');
-                        $('#location').append('<td>' + cdata.projectInvoices.invoice.amount + '</td>   ');
-                        $('#location').append('<td>' + cdata.projectInvoices.invoice.invoiceDue + '</td>   ');
+                        $('#location').append('<td>' + cdata.invoiceNumber + '</td>   ');
+                        $('#location').append('<td>' + cdata.invoiceDate + '</td>   ');
+                        $('#location').append('<td>' + cdata.amount + '</td>   ');
+                        $('#location').append('<td>' + cdata.invoiceDue + '</td>   ');
 
                      /*    $('#location').append('<td>' + cust.address + '</td>   ');
                         $('#location').append('<td>' + cust.poagreement + '</td>   ');
