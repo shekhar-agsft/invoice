@@ -9,6 +9,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="css/toaster.css">
+    <script src="js/toaster.js"></script>
     <style>
         .middle {
             position: absolute;
@@ -16,6 +19,44 @@
             right: 0;
             margin: auto;
             top: 15%;
+            background: #fff;
+            box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+
+        }
+
+        body {
+
+            background: #e9ecef;
+        }
+
+        .inputbox {
+            border-radius: 0;
+            border: none;
+            border-bottom: 2px solid #4285f4;
+        }
+
+        .form-control:focus {
+            color: #495057;
+            background-color: #fff;
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: none;
+        }
+
+        form {
+            margin-top: 60px;
+        }
+
+        .form-group {
+            margin-top: 2rem;
+        }
+        .btn-custom{
+            box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+            border-radius: 0;
+            float: right;
+        }
+        .sign{
+            font-size: 2rem;
         }
     </style>
 </head>
@@ -27,17 +68,19 @@
         <div class="row">
             <div class="col-sm-4"></div>
             <div class="col-sm-4 jumbotron middle">
+                <label class="sign">Sign In</label>
                 <form>
                     <div class="form-group">
-                        <label for="email">Email address:</label>
-                        <input type="email" class="form-control" id="email" placeholder="Email">
+
+                        <input type="email" class="form-control inputbox" id="email" placeholder="Email">
                     </div>
                     <div class="form-group">
-                        <label for="pwd">Password:</label>
-                        <input type="password" class="form-control" id="pwd" placeholder="Pasword">
-                    </div>
 
-                    <a type="submit" onclick="login()" class="btn btn-primary btn-block"/>Submit</a>    
+                        <input type="password" class="form-control inputbox" id="pwd" placeholder="Pasword">
+                    </div>
+                    <div class="form-group">
+                    <a type="submit" onclick="login()" class="btn btn-primary btn-custom" />Login</a>
+                </div>
                 </form>
             </div>
             <div class="col-sm-4"> </div>
@@ -46,6 +89,15 @@
 
 </body>
 <script>
+    $(document).keypress(function (event) {
+
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            //alert('You pressed a "enter" key in somewhere');	
+            login();
+        }
+
+    });
 
     function login() {
 
@@ -60,19 +112,23 @@
             contentType: 'application/json; charset=utf-8',
             type: 'POST',
             url: 'http://127.0.0.1:8080/login',
-            dataType:"json",
+            dataType: "json",
             data: JSON.stringify(formData),
             async: false,
             success: function (data) {
                 console.log(JSON.stringify(data.response_body));
 
                 if (data.response_code == 200) {
-                    alert(data.response_message)
-                    window.location = "http://127.0.0.1:5500/home.html";
+                    toastr.success(data.response_message);
+
+                    localStorage.setItem("token", data.response_body.token)
+                    window.location = "http://127.0.0.1:5500/viewcustomers.html";
                     return false;
                 } else {
-                    alert(data.response_message)
-                    window.location = "http://127.0.0.1:5500/index.html";
+                    // alert(data.response_message)
+                    toastr.error(data.response_message);
+
+                    // window.location = "http://127.0.0.1:5500/index.html";
                     return false;
                 }
             },
@@ -82,8 +138,6 @@
         });
 
     }
-
-
 </script>
 
 </html>

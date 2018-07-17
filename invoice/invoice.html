@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/toaster.css">
+    <script src="js/toaster.js"></script>
 
     <style>
         .middle {
@@ -24,14 +26,14 @@
 <body>
 
     <div class="container ">
+            
         <div class="row">
             <div class="col-sm-4"></div>
             <div class="col-sm-4 jumbotron middle">
                 <!-- <form> -->
                 <div class="form-group">
                     <label for="name">Customer Name:</label>
-                    <input type="text" class="form-control" disabled style="text-transform:capitalize"
-                        id="name" placeholder="Customer Name">
+                    <input type="text" class="form-control" disabled style="text-transform:capitalize" id="name" placeholder="Customer Name">
                 </div>
                 <!-- 				<div class="form-group">
 						<label for="jdate">D.O.J:</label> <input type="date"
@@ -43,14 +45,12 @@
 					</div> -->
                 <div class="form-group">
                     <label for="address">Address:</label>
-                    <input type="text" class="form-control" disabled  id="address"
-                        placeholder="Address">
+                    <input type="text" class="form-control" disabled id="address" placeholder="Address">
                 </div>
 
                 <div class="form-group">
                     <label for="po">PO Agreement #:</label>
-                    <input type="text" class="form-control" disabled 
-                        id="po" placeholder="PO Agreement #">
+                    <input type="text" class="form-control" disabled id="po" placeholder="PO Agreement #">
                 </div>
                 <div class="form-group">
                     <label for="jdate">Period:</label>
@@ -62,21 +62,18 @@
                 </div>
                 <div class="form-group">
                     <label for="invoiceNumber">Invoice #:</label>
-                    <input type="text" class="form-control" disabled 
-                        id="invoiceNumber" placeholder="Invoice Number">
+                    <input type="text" class="form-control" disabled id="invoiceNumber" placeholder="Invoice Number">
                 </div>
                 <div class="form-group">
                     <label for="invoiceDue">Invoice Due:</label>
-                    <input type="text" class="form-control"  id="invoiceDue"
-                        placeholder="Invoice Due">
+                    <input type="text" class="form-control" id="invoiceDue" placeholder="Invoice Due">
                 </div>
 
                 <div class="form-group">
                     <label for="invoiceDue">Amount:</label>
-                    <input type="text" class="form-control"  id="amount"
-                        placeholder="Amount">
+                    <input type="text" class="form-control" id="amount" placeholder="Amount">
                 </div>
-                <button type="submit" onclick="submitInvoice()" class="btn btn-success btn-block" onclick="gernateReleseLetter()">Submit</button>
+                <button type="submit" onclick="submitInvoice()" class="btn btn-success btn-block">Submit</button>
                 <!-- 	</form> -->
             </div>
             <div class="col-sm-4"></div>
@@ -91,12 +88,16 @@
 
     $(document).ready(function () {
         var custId = localStorage.getItem("custId");
-        var invoiceDate ;
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        var invoiceDate;
         $.ajax(
             {
                 type: "GET",
                 url: 'http://127.0.0.1:8080/getSingleCustomer/' + custId,
                 contentType: "application/json; charset=utf-8",
+                headers: { "Authorization": localStorage.getItem('token') },
                 success: function (data) {
                     console.log(data.response_body)
                     $("#name").val(data.response_body.customerName);
@@ -104,10 +105,14 @@
                     $("#po").val(data.response_body.poagreement);
                     var fullDate = new Date(data.response_body.period)
                     var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1) ? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
-                    invoiceDate =  new Date(data.response_body.period);
+                    invoiceDate = new Date(data.response_body.period);
                     var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
-                    $("#period").val(currentDate);
-                    $("#invoiceNumber").val(data.response_body.invoiceNumber);
+
+
+                    const d = new Date(data.response_body.period);
+
+                    $("#period").val(monthNames[d.getMonth()]+""+new Date(d).getFullYear());
+                    $("#invoiceNumber").val("AGS"+data.response_body.invoiceNumber);
                 },
 
                 error: function (msg) {
@@ -116,24 +121,30 @@
                 }
             });
     })
-    
-    function submitInvoice(){
+
+    function submitInvoice() {
         var custId = localStorage.getItem("custId");
+
+        //var invoiceDate = new Date($("#invoiceNumber").val());
+        var date = new Date($('#invoiceDate').val());
+        console.log(date)
         $.ajax(
             {
                 type: "POST",
                 url: 'http://127.0.0.1:8080/saveinvoice/' + custId,
                 contentType: "application/json; charset=utf-8",
+                headers: { "Authorization": localStorage.getItem('token') },
                 data: JSON.stringify({
-                    "invoiceDate":$("#invoiceDate").val(),
-                    "invoiceNumber":$("#invoiceNumber").val(),
-                    "invoiceDue":$("#invoiceDue").val(),
-                    "amount":$("#amount").val(),
+                    "invoiceDate": date,
+                    "invoiceNumber": $("#invoiceNumber").val(),
+                    "invoiceDue": $("#invoiceDue").val(),
+                    "amount": $("#amount").val(),
 
                 }),
                 success: function (data) {
-                    alert(data.response_message)
-                 window.location.href= "viewinvoice.html";
+
+                    toastr.success(data.response_message);
+                    window.location.href = "viewinvoice.html";
                 },
 
                 error: function (msg) {
@@ -142,7 +153,11 @@
                 }
             });
     }
+    function logOut(){
 
+localStorage.clear();
+window.location = "http://127.0.0.1:5500/index.html"
+}
 </script>
 
 </html>

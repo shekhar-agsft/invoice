@@ -8,26 +8,36 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/toaster.css">
+    <script src="js/toaster.js"></script>
     <style>
         .btn-custom {
             border-radius: 0;
             box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 
         }
-        td{
+
+        td {
             padding: 3px;
+        }
+        .well{
+            box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container-fuild ">
-        <h2>Invoice </h2>
+    <div class="container ">
+        <h2 style="    text-align: center;">Invoice </h2>
         <div class="row" style="margin: 0">
-            <div class="col-md-6 well">
+                <button class="btn btn-info btn-custom" style="margin-bottom:5px" type="button" onclick="backto()">Back</button> 
+                <button class="btn btn-primary btn-custom" type="button" style="float:right;margin-left:2px;" onclick="logOut()">Sign Out</button>
+            <div class="col-md-12 well">
+                
                 <div class="table-responsive">
-                    <table class="table" id="location">
+                    <table class="table table-bordered table-striped" id="location">
                         <thead>
                             <tr>
                                 <th>Invoice Number</th>
@@ -41,23 +51,23 @@
                         </thead>
 
                     </table>
-                
+
 
 
                 </div>
             </div>
-            <div class="col-md-6 well">
-                    <div class="table-responsive">
-                    <table class="table" id="project">
-                            <thead>
-                                <th>Project Name</th>
-                                <th>Resources</th>
-                                <th>Period</th>
-                                <th>Type</th>
-                                <th>Amount Billed</th>
-                            </thead>
-                            </table>
-                            </div>
+            <div class="col-md-12 well">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" id="project">
+                        <thead>
+                            <th>Project Name</th>
+                            <th>Resources</th>
+                            <th>Period</th>
+                            <th>Type</th>
+                            <th>Amount Billed</th>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -128,28 +138,29 @@
                 type: "GET",
                 url: 'http://127.0.0.1:8080/getInvoiceForCustomer/' + custId,
                 contentType: "application/json; charset=utf-8",
+                headers: { "Authorization": localStorage.getItem('token') },
                 success: function (data) {
                     console.log(data.response_body.invoices)
 
                     for (var i = 0; i < data.response_body.length; i++) {
                         var invoice = data.response_body[i].invoice;
                         $('#location').append('<tr>');
-                        $('#location').append('<td>' + invoice.invoiceNumber + '</td>   ');
+                        $('#location').append('<td>AGS' + invoice.invoiceNumber + '</td>   ');
                         var fullDate = new Date(invoice.invoiceDate)
                         var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1) ? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
                         invoiceDate = new Date(invoice.invoiceDate);
                         var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
                         $('#location').append('<td>' + currentDate + '</td>   ');
-                        $('#location').append('<td>' + invoice.amount + '</td>   ');
+                        $('#location').append('<td>$' + invoice.amount + '</td>   ');
                         $('#location').append('<td>' + invoice.invoiceDue + '</td>   ');
                         // $('#location').append('<td>' + cust.period + '</td>   ');
-                        $('#location').append('<td> <button class="btn btn-success btn-custom" onclick="addProject(' + invoice.invoiceId + ',' + invoice.invoiceNumber + ')">Add</button></td>   ');
-                        $('#location').append('<td> <button class="btn btn-primary btn-custom" onclick="viewProject()">View</button></td>   ');
+                        $('#location').append('<td> <button class="btn btn-success btn-custom btn-block" onclick="addProject(' + invoice.invoiceId +')">Add</button></td>   ');
+                        $('#location').append('<td> <button class="btn btn-primary btn-custom btn-block" onclick="viewProject()">View</button></td>   ');
 
                         $('#location').append('</tr>');
 
 
-
+                        localStorage.setItem("invoiceId", invoice.invoiceId);
                         var projectdata = data.response_body[i].invoiceProjectDetails;
                         for (var j = 0; j < projectdata.length; j++) {
                             var project = projectdata[j];
@@ -158,7 +169,7 @@
                             $('#project').append('<td>' + project.resources + '</td> ');
                             $('#project').append('<td>' + project.period + '</td> ');
                             $('#project').append('<td>' + project.type + '</td> ');
-                            $('#project').append('<td>' + project.amountBilled + '</td> ');
+                            $('#project').append('<td>$' + project.amountBilled + '</td> ');
                             $('#project').append('</tr>');
                         }
                         if (invoice.projectlistlength == 0) {
@@ -169,7 +180,7 @@
 
 
 
-                       
+
                     }
                 },
 
@@ -180,9 +191,9 @@
             });
     })
 
-    function addProject(id, invoiceNumber) {
+    function addProject(id) {
         invoiceId = id;
-        localStorage.setItem("invoiceId", invoiceNumber);
+        localStorage.setItem("invoiceId", invoiceId);
         $("#openmodal").click();
         //window.location.href ="project.html";
     }
@@ -203,6 +214,7 @@
             contentType: 'application/json; charset=utf-8',
             type: 'POST',
             url: 'http://127.0.0.1:8080/saveprojects/' + invoiceId,
+            headers: { "Authorization": localStorage.getItem('token') },
             dataType: "json",
             data: JSON.stringify(formData),
             async: false,
@@ -210,12 +222,12 @@
                 console.log(JSON.stringify(data.response_body));
 
                 if (data.response_code == 200) {
-                    alert(data.response_message)
+                    toastr.success(data.response_message);
                     $("#closemodal").click();
                     window.location = "http://127.0.0.1:5500/viewinvoice.html";
                     return false;
                 } else {
-                    alert(data.response_message)
+                    toastr.error(data.response_message)
                     //  window.location = "http://127.0.0.1:5500/viewcustomers.html";
                     return false;
                 }
@@ -231,7 +243,15 @@
         window.location = "http://127.0.0.1:5500/invoicetemplate.html"
     }
 
+function backto(){
+    window.location = "http://127.0.0.1:5500/viewcustomers.html"
+}
 
+function logOut(){
+
+    localStorage.clear();
+    window.location = "http://127.0.0.1:5500/index.html"
+}
 </script>
 
 </html>

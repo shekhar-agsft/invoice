@@ -9,11 +9,15 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link rel="stylesheet" href="css/toaster.css">
+    <script src="js/toaster.js"></script>
     <style>
         .text-center {
             text-align: center;
-            color: #fff;
-            background-color: #00cdcd
+            color: black;
+            background-color: grey;
+
         }
 
         .header {
@@ -27,13 +31,12 @@
         }
 
         .tble-header {
-            color: #fff;
-            background-color: #00cdcd
+            color: black;
+            background-color: grey;
+
         }
 
-        .tble-body {
-            background-color: yellow;
-        }
+        .tble-body {}
 
         .bank {
             font-size: 20px;
@@ -41,8 +44,9 @@
         }
 
         .bank-details {
-            color: #fff;
-            background-color: #00cdcd
+            color: black;
+            background-color: grey;
+
         }
 
         .btn-custom {
@@ -60,7 +64,11 @@
             <div class="col-md-12 text-center">
                 <div class="header">
                     <label>INVOICE </label>
+                    <button class="btn btn-info btn-custom" style="margin-bottom:5px; float:left" type="button" onclick="backto()">Back</button>
+                    <button class="btn btn-primary btn-custom" type="button" style="float:right;margin-left:2px;" onclick="logOut()">Sign Out</button>
+
                     <button class="btn btn-warning btn-custom" type="button" onclick="exportData()">Export</button>
+
                 </div>
                 <div>
 
@@ -72,7 +80,7 @@
                 <img src="/images/agile.jpeg" class="image">
             </div>
             <div class="col-md-6">
-                <label style="    padding-top: 75px;">Bill To</label>
+                <label style="padding-top: 75px;">Bill To</label>
             </div>
         </div>
         <div class="row">
@@ -118,7 +126,7 @@
                     <span class="tble-body" id="invoicedate">02/01/2018</span>
                 </p>
                 <p>Invoice #:
-                    <span class="tble-body" id="invoicenumber">WE1801</span>
+                    <span class="tble-body" id="invoicenumber">AGS1801</span>
                 </p>
                 <p>Invoice Amount:
                     <span class="tble-body" id="amount">$550</span>
@@ -184,10 +192,14 @@
     $(document).ready(function () {
         var custId = localStorage.getItem("custId");
         var invoiceId = localStorage.getItem("invoiceId");
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
         $.ajax(
             {
                 type: "GET",
                 url: 'http://127.0.0.1:8080/getCustomerDetails/' + custId + "/" + invoiceId,
+                headers: { "Authorization": localStorage.getItem('token') },
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
                     console.log(data.response_body)
@@ -204,10 +216,17 @@
                     invoiceDate = new Date(cust.invoiceDate);
                     var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
                     $("#invoicedate").text(currentDate);
-                    $("#invoicenumber").text("WE" + cust.invoiceNumber);
+                    $("#invoicenumber").text("AGS" + cust.invoiceNumber);
                     $("#poagreement").text(cust.poagreement);
                     $("#amount").text("$" + cust.amount);
-                    $("#period").text(new Date());
+                    var fullDate = new Date(new Date(cust.period))
+                    var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1) ? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
+
+                    var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+                    const d = new Date(data.response_body.period);
+
+                    $("#period").val(monthNames[d.getMonth()] + "" + new Date(d).getFullYear());
+                    //$("#period").text(currentDate);
                     $("#invoicedue").text(cust.invoiceDue);
                     var totalInvoice = 0.0;
 
@@ -215,7 +234,8 @@
                         $('#location').append('<tr>');
                         $('#location').append('<td>' + cust.invoiceProjectDetails[i].projectName + '</td>');
                         $('#location').append('<td>' + cust.invoiceProjectDetails[i].resources + '</td>');
-                        $('#location').append('<td>' + cust.invoiceProjectDetails[i].period + '</td>');
+                        const d1 = new Date(cust.invoiceProjectDetails[i].period);
+                        $('#location').append('<td>' + monthNames[d1.getMonth()] + "" + new Date(d1).getFullYear() + '</td>');
                         $('#location').append('<td>' + cust.invoiceProjectDetails[i].type + '</td>');
                         $('#location').append('<td>$' + cust.invoiceProjectDetails[i].amountBilled + '</td>');
                         $('#location').append('</tr>');
@@ -256,25 +276,36 @@
             {
                 type: "GET",
                 url: 'http://127.0.0.1:8080/export/' + custId + "/" + invoiceId,
+                headers: { "Authorization": localStorage.getItem('token') },
                 xhrFields: {
                     responseType: 'blob'
                 },
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
-                    console.log(data.response_body)
+                    toastr.success("Download started");
                     var a = document.createElement('a');
                     var url = window.URL.createObjectURL(data);
                     a.href = url;
-                    a.download = name + '.pdf';
+                    a.download = "invoice_" + invoiceId + '.pdf';
                     a.click();
                     window.URL.revokeObjectURL(url);
 
+                    window.location.href = "viewcustomers.html";
                 }
             });
 
 
     }
 
+    function logOut() {
+
+        localStorage.clear();
+        window.location = "http://127.0.0.1:5500/index.html"
+    }
+
+    function backto() {
+        window.location = "http://127.0.0.1:5500/viewinvoice.html"
+    }
 </script>
 
 </html>
