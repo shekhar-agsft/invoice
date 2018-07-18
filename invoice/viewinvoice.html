@@ -20,7 +20,8 @@
         td {
             padding: 3px;
         }
-        .well{
+
+        .well {
             box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 
         }
@@ -32,10 +33,10 @@
     <div class="container ">
         <h2 style="    text-align: center;">Invoice </h2>
         <div class="row" style="margin: 0">
-                <button class="btn btn-info btn-custom" style="margin-bottom:5px" type="button" onclick="backto()">Back</button> 
-                <button class="btn btn-primary btn-custom" type="button" style="float:right;margin-left:2px;" onclick="logOut()">Sign Out</button>
+            <button class="btn btn-info btn-custom" style="margin-bottom:5px" type="button" onclick="backto()">Back</button>
+            <button class="btn btn-primary btn-custom" type="button" style="float:right;margin-left:2px;" onclick="logOut()">Sign Out</button>
             <div class="col-md-12 well">
-                
+
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped" id="location">
                         <thead>
@@ -45,10 +46,14 @@
                                 <th>Amount</th>
                                 <th>Invoice Due</th>
                                 <th>Add details</th>
+
+                                <th>View Projects</th>
                                 <th>View details</th>
-
                             </tr>
+
                         </thead>
+
+
 
                     </table>
 
@@ -56,19 +61,7 @@
 
                 </div>
             </div>
-            <div class="col-md-12 well">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped" id="project">
-                        <thead>
-                            <th>Project Name</th>
-                            <th>Resources</th>
-                            <th>Period</th>
-                            <th>Type</th>
-                            <th>Amount Billed</th>
-                        </thead>
-                    </table>
-                </div>
-            </div>
+
         </div>
 
         <!--  <button type="button" class="btn btn-default">Export</button> -->
@@ -125,6 +118,48 @@
     </div>
 
 
+
+    <div class="modal fade" id="viewModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">View Projects</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" id="project">
+                            <thead>
+                                <th>Project Name</th>
+                                <th>Resources</th>
+                                <th>Period</th>
+                                <th>Type</th>
+                                <th>Amount Billed</th>
+                            </thead>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" id="closeViewModal" class="btn btn-default btn-custom" data-dismiss="modal" onclick="closeProjects()">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+
 </body>
 <script>
     var service = 'http://localhost:8080';
@@ -144,8 +179,9 @@
 
                     for (var i = 0; i < data.response_body.length; i++) {
                         var invoice = data.response_body[i].invoice;
+                        $('#location').append('<tbody>');
                         $('#location').append('<tr>');
-                        $('#location').append('<td>AGS' + invoice.invoiceNumber + '</td>   ');
+                        $('#location').append('<td>' + invoice.invoiceNumber + '</td>   ');
                         var fullDate = new Date(invoice.invoiceDate)
                         var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1) ? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
                         invoiceDate = new Date(invoice.invoiceDate);
@@ -154,31 +190,18 @@
                         $('#location').append('<td>$' + invoice.amount + '</td>   ');
                         $('#location').append('<td>' + invoice.invoiceDue + '</td>   ');
                         // $('#location').append('<td>' + cust.period + '</td>   ');
-                        $('#location').append('<td> <button class="btn btn-success btn-custom btn-block" onclick="addProject(' + invoice.invoiceId +')">Add</button></td>   ');
-                        $('#location').append('<td> <button class="btn btn-primary btn-custom btn-block" onclick="viewProject()">View</button></td>   ');
+                        $('#location').append('<td> <button class="btn btn-success btn-custom btn-block" onclick="addProject(' + invoice.invoiceId + ')">Add</button></td>   ');
+                        $('#location').append('<td> <button class="btn btn-info btn-custom btn-block" id="viewModal1" data-toggle="modal" data-target="#viewModal" onclick="viewProjectModal(' + invoice.invoiceId + ',' + custId + ')">View Projects</button></td>')
+                        $('#location').append('<td> <button class="btn btn-primary btn-custom btn-block" onclick="viewProject(' + invoice.invoiceId + ')">View</button></td>');
+
+
+
 
                         $('#location').append('</tr>');
-
-
                         localStorage.setItem("invoiceId", invoice.invoiceId);
-                        var projectdata = data.response_body[i].invoiceProjectDetails;
-                        for (var j = 0; j < projectdata.length; j++) {
-                            var project = projectdata[j];
-                            $('#project').append('<tr>');
-                            $('#project').append('<td>' + project.projectName + '</td> ');
-                            $('#project').append('<td>' + project.resources + '</td> ');
-                            $('#project').append('<td>' + project.period + '</td> ');
-                            $('#project').append('<td>' + project.type + '</td> ');
-                            $('#project').append('<td>$' + project.amountBilled + '</td> ');
-                            $('#project').append('</tr>');
-                        }
-                        if (invoice.projectlistlength == 0) {
-                            $('#project').append('<tr>')
-                            $('#project').append('<td colspan=5> No Projects Available</td> ');
-                            $('#project').append('</tr>')
-                        }
 
 
+                        $('#location').append('</tbody>');
 
 
                     }
@@ -239,19 +262,76 @@
 
     }
 
-    function viewProject() {
+    function viewProject(invoiceId)
+     {
+         localStorage.setItem("invoiceId",invoiceId);
         window.location = "http://127.0.0.1:5500/invoicetemplate.html"
     }
 
-function backto(){
-    window.location = "http://127.0.0.1:5500/viewcustomers.html"
-}
+    function backto() {
+        window.location = "http://127.0.0.1:5500/viewcustomers.html"
+    }
 
-function logOut(){
+    function logOut() {
 
-    localStorage.clear();
-    window.location = "http://127.0.0.1:5500/index.html"
-}
+        localStorage.clear();
+        window.location = "http://127.0.0.1:5500/index.html"
+    }
+
+    function viewProjectModal(invoiceId, custId) {
+
+        /*  var custId = localStorage.getItem("custId");
+         var invoiceId = localStorage.getItem("invoiceId"); */
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        $.ajax(
+            {
+                type: "GET",
+                url: 'http://127.0.0.1:8080/getCustomerDetails/' + custId + "/" + invoiceId,
+                headers: { "Authorization": localStorage.getItem('token') },
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    console.log(data.response_body)
+
+                    // for (var i = 0; i < data.response_body.customers.length; i++) {
+                    var cust = data.response_body;
+                    var cdata = data.response_body;
+
+
+                    $("#project td").remove();
+                    for (var i = 0; i < cust.invoiceProjectDetails.length; i++) {
+                        $('#project').append('<tr>');
+                        $('#project').append('<td>' + cust.invoiceProjectDetails[i].projectName + '</td>');
+                        $('#project').append('<td>' + cust.invoiceProjectDetails[i].resources + '</td>');
+                        const d1 = new Date(cust.invoiceProjectDetails[i].period);
+                        $('#project').append('<td>' + monthNames[d1.getMonth()] + "" + new Date(d1).getFullYear() + '</td>');
+                        $('#project').append('<td>' + cust.invoiceProjectDetails[i].type + '</td>');
+                        $('#project').append('<td>$' + cust.invoiceProjectDetails[i].amountBilled + '</td>');
+                        $('#project').append('</tr>');
+                        // totalInvoice = totalInvoice + cust.invoiceProjectDetails[i].amountBilled;
+
+                    }
+
+
+
+                    // }
+                },
+
+                error: function (msg) {
+
+                    alert(msg.responseText);
+                }
+            });
+    }
+
+    function closeProjects() {
+        $('#viewModal').on('hidden', function () {
+            clear()
+        });
+    }
+
+
 </script>
 
 </html>

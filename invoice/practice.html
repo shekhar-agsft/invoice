@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Document</title>
+    <style>
+        .invoice-header {
+            height: 65px;
+            background-color: #DCDCDC	;
+        }
+
+        .header-text {
+            font-size: 35px;
+            font-weight: bold;
+            text-align: center;
+            color: #000;
+        }
+      
+        .tble-td ,.tble-th{
+          
+            padding: 6px;
+            border-bottom: 1px solid #ddd;
+
+        
+        }
+        
+         .image {
+            height: 110px
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+            <div class="invoice-header">
+                    <div class="header-text">
+                        INVOICE <span> <img src="https://agsft.com/wp-content/uploads/2016/03/AGS-logo_trans-copy.png"></img></span>
+                    </div>
+
+                </div>
+        <table class="table" style="width:100%">
+            <tbody>
+            
+                <tr>
+                    <td style="width:70%">
+                   
+                        <p style="font-weight: bold;    margin-bottom: 0;">Agile Soft Systmes, Inc</p>
+                        <p style="    margin-top: 0;
+                        margin-bottom: 0;">38930 Blacow Rd Ste B3</p>
+                        <p style="    margin-top: 0;
+                        margin-bottom: 0;">Fremont, CA 94536</p>
+                    </td>
+    
+                    <td style="padding:0;">
+                       <p style="font-weight: bold ;margin-bottom: 0;">Bill To</p>
+                        <p style="font-weight: bold;margin-bottom:0;margin-top: 0;">
+                            <span id="name">${name}</span>
+                        </p>
+                        <p style="margin-top: 0;">
+                            <span id="address1"> ${address}</span>
+                        </p>
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td style="width:70%">
+                        <label>PO/Agreement #:   <span id="poagreement"> ${poagreement}</span> </label>
+                        <br>
+                        <label>Period:
+                            <span>${period}</span>
+                        </label>
+                      
+                    </td>
+                    
+                    <td >
+                        <label>Invoice Date :<span> ${invoiceDate}</span> </label>
+                        <br>
+                        <label >Invoice #:<span>AGS${invoiceNumber}</span> </label>
+                        <br>
+                        <label >Invoice Amount:<span>$${amount}</span> </label>
+                        <br>
+                        <label>Invoice Due:${invoiceDue}</label>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table" style="width:100%;">
+            <thead>
+                <tr style=" background-color: #DCDCDC	;">
+                    <th class="tble-th">Project</th>
+                    <th class="tble-th">Resources</th>
+                    <th class="tble-th">Peroid</th>
+                    <th class="tble-th">Type</th>
+                    <th class="tble-th">Amt Bill</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style=" background-color: #DCDCDC	;">
+                   #foreach(${order} in ${invoiceProjectDetails})
+					
+					            <tr>
+					                <td class="tble-td">${order.projectName}</td>
+					                <td class="tble-td">${order.resources}</td>
+					                <td class="tble-td">${order.period}</td>
+					                <td class="tble-td">${order.type}</td>
+					                <td class="tble-td">${order.amountBilled}</td>
+					                
+					            </tr>
+					            <br>
+					        #end
+                </tr>
+                <tr>
+                    <td class="tble-td" style="background-color: #DCDCDC	; color:#000;">Total Invoice</td>
+                    <td class="tble-td"></td>
+                    <td class="tble-td"></td>
+                    <td class="tble-td"></td>
+                    <td class="tble-td"  style="background-color: #DCDCDC	;">$${totalInvoice}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table" style="width:100%">
+            <tbody>
+                <tr>
+                    <td>
+                        <p style="font-weight: bold">Pay through Wells Fargo Bank:</p>
+                        <p style="margin-bottom:0;">Agile Soft Systems, Inc</p>
+                        <p style="margin-bottom:0;margin-top:0">38930 Blacow Rd Ste B3</p>
+                        <p style="margin-bottom:0;margin-top:0">Fremont, CA 94536</p>
+                        <p style=" background-color: #DCDCDC	; color:#000;margin-bottom:0;margin-top:0">Wells Fargo Bank Acct # :<span>${accountDetails.accountNumber}</span></p>
+                        <p style=" background-color: #DCDCDC	; color:#000;margin-bottom:0;margin-top:0">ABA #: <span>${accountDetails.infoNumber}</span></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="invoice-logo">
+
+        </div>
+
+   
+
+
+
+
+
+    </div>
+</body>
+
+
+</html>

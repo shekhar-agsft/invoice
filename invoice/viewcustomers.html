@@ -142,7 +142,7 @@
                         </div>
                         <div class="form-group">
                             <label for="jdate">Period:</label>
-                            <input type="text" class="form-control" disabled id="period">
+                            <input type="date" class="form-control"  id="period">
                         </div>
                         <div class="form-group">
                             <label for="jdate">Invoice Date:</label>
@@ -157,10 +157,10 @@
                             <input type="text" class="form-control" id="invoiceDue" placeholder="Invoice Due">
                         </div>
 
-                        <div class="form-group">
-                            <label for="invoiceDue">Amount:</label>
+                       <!--  <div class="form-group">
+                            <label for="amount">Amount:</label>
                             <input type="text" class="form-control" id="amount" placeholder="Amount">
-                        </div>
+                        </div> -->
                         <button type="submit" onclick="submitInvoice()" class="btn btn-success btn-custom">Submit</button>
                     </form>
 
@@ -290,10 +290,10 @@
                     var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
 
 
-                    const d = new Date(data.response_body.period);
+                    //const d = new Date(data.response_body.period);
 
-                    $("#period").val(monthNames[d.getMonth()] + "" + new Date(d).getFullYear());
-                    $("#invoiceNumber").val("AGS" + data.response_body.invoiceNumber);
+                   // $("#period").val(monthNames[d.getMonth()] + "" + new Date(d).getFullYear());
+                    $("#invoiceNumber").val(data.response_body.invoiceNumber);
                     //  $("#invoicemodal1").click();
 
                 },
@@ -307,7 +307,14 @@
 
     function submitInvoice() {
         var custId = localStorage.getItem("custId");
-        var ino = $("#invoiceNumber").val().split("AGS");
+        var ino = $("#invoiceNumber").val();
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+                   // $("#period").val();
+        var period =  new Date( $("#period").val());
+       
+        var periodConvert = monthNames[period.getMonth()] + "" +period.getFullYear();
         //var invoiceDate = new Date($("#invoiceNumber").val());
         var date = new Date($('#invoiceDate').val());
         console.log(date)
@@ -319,9 +326,10 @@
                 headers: { "Authorization": localStorage.getItem('token') },
                 data: JSON.stringify({
                     "invoiceDate": date,
-                    "invoiceNumber": ino[1],
+                    "invoiceNumber": ino,
                     "invoiceDue": $("#invoiceDue").val(),
-                    "amount": $("#amount").val(),
+                    "amount": 0.0,
+                    "period": periodConvert
 
                 }),
                 success: function (data) {

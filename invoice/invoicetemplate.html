@@ -55,11 +55,16 @@
             border-radius: 0;
             box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
         }
+        td{
+            padding: 6px;
+            border: 1px solid #ddd;
+
+        }
     </style>
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" style="    border: 1px solid;">
         <div class="row">
             <div class="col-md-12 text-center">
                 <div class="header">
@@ -76,27 +81,28 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-9">
                 <img src="/images/agile.jpeg" class="image">
             </div>
-            <div class="col-md-6">
-                <label style="padding-top: 75px;">Bill To</label>
+            <div class="col-md-3" >
+                <!-- <label style="padding-top: 75px;">Bill To</label> -->
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <p>
+            <div class="col-md-9">
+                <p style="margin-bottom: 0;">
                     <label>Agile Soft Systems, Inc</label>
                 </p>
-                <p>
+                <p style="margin-bottom: 0;">
                     <label>38930 Blacow Rd Ste B3</label>
                 </p>
                 <p>
                     <label>Fremont, CA 94536</label>
                 </p>
             </div>
-            <div class="col-md-6">
-                <p class="tble-body">
+            <div class="col-md-3" >
+                <p style="font-weight: bold">Bill To,</p>
+                <p class="tble-body" style="margin-bottom:0">
                     <label id="name"></label>
                 </p>
                 <p class="tble-body">
@@ -110,18 +116,16 @@
             <div class="col-md-6"></div>
         </div>
         <div class="row">
-            <div class="col-md-2">
-
-            </div>
-            <div class="col-md-4">
-                <p> PO/Agreement #:
+         
+            <div class="col-md-9">
+                <p style="margin-bottom: 0;"> PO/Agreement #:
                     <span class="tble-body" id="poagreement">Dt 7/7/17</span>
                 </p>
                 <p>Period:
                     <span class="tble-body" id="period">Jan 2018</span>
                 </p>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3" style="text-align:justify">
                 <p>Invoice Date:
                     <span class="tble-body" id="invoicedate">02/01/2018</span>
                 </p>
@@ -163,15 +167,17 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <p class="bank"> Pay through Wells Fargo Bank:</p>
-                                    <p>Agile Soft Systems, Inc</p>
-                                    <p>38930 Blacow Rd Ste B3</p>
-                                    <p>Fremont, CA 94536</p>
-                                    <p class="bank-details">Wells Fargo Bank Acct #
-                                        <span id="accountNo">123456789</span>
+                                    <p class="bank"> Pay through <span id="bankname"></span> Bank</p>
+                                    <p style="margin-bottom:0;"> <span id="accountcompany"></span></p>
+                                    <p style="margin-bottom:0;margin-top:0"><span id="accountaddress1"></span></p>
+                                    <p style="margin-bottom:0;margin-top:0"><span id="accountaddress2"></span></p>
+                                    <p style="margin-bottom:0;margin-top:0"><span id="accountaddress3"></span></p>
+                                   <!--  <p style="margin-bottom:0;margin-top:0">Fremont, CA 94536</p> -->
+                                    <p style="margin-bottom:0;margin-top:0" class="bank-details"><span id="bankName"></span> Bank Acct #
+                                        <span id="accountNo"></span>
                                     </p>
-                                    <p class="bank-details">ABA #
-                                        <span id="abcno">12345678</span>
+                                    <p style="margin-bottom:0;margin-top:0" class="bank-details">ABA #
+                                        <span id="abcno"></span>
                                     </p>
                                 </td>
                             </tr>
@@ -216,7 +222,7 @@
                     invoiceDate = new Date(cust.invoiceDate);
                     var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
                     $("#invoicedate").text(currentDate);
-                    $("#invoicenumber").text("AGS" + cust.invoiceNumber);
+                    $("#invoicenumber").text(cust.invoiceNumber);
                     $("#poagreement").text(cust.poagreement);
                     $("#amount").text("$" + cust.amount);
                     var fullDate = new Date(new Date(cust.period))
@@ -250,9 +256,16 @@
                     $('#location').append('<td></td>');
                     $('#location').append('<td>' + "$" + totalInvoice + '</td>');
                     $('#location').append('</tr>');
+                    var nameOfCompany = cust.accountDetails.companyName.split(",");
+                    
+                    $('#accountcompany').text(cust.accountDetails.companyName);
+                   // $('#accountaddress1').text(nameOfCompany[1]);
+                    $('#accountaddress2').text(cust.accountDetails.address);
+                   // $('#accountaddress3').text(nameOfCompany[3]);
+                    $('#bankName').text(cust.accountDetails.bankName);
                     $('#accountNo').text(cust.accountDetails.accountNumber);
                     $('#abcno').text(cust.accountDetails.infoNumber);
-
+                    $('#bankname').text(cust.accountDetails.bankName);
                     // }
                 },
 
