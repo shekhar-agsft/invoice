@@ -55,7 +55,8 @@
             border-radius: 0;
             box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
         }
-        td{
+
+        td {
             padding: 6px;
             border: 1px solid #ddd;
 
@@ -84,7 +85,7 @@
             <div class="col-md-9">
                 <img src="/images/agile.jpeg" class="image">
             </div>
-            <div class="col-md-3" >
+            <div class="col-md-3">
                 <!-- <label style="padding-top: 75px;">Bill To</label> -->
             </div>
         </div>
@@ -100,7 +101,7 @@
                     <label>Fremont, CA 94536</label>
                 </p>
             </div>
-            <div class="col-md-3" >
+            <div class="col-md-3">
                 <p style="font-weight: bold">Bill To,</p>
                 <p class="tble-body" style="margin-bottom:0">
                     <label id="name"></label>
@@ -116,7 +117,7 @@
             <div class="col-md-6"></div>
         </div>
         <div class="row">
-         
+
             <div class="col-md-9">
                 <p style="margin-bottom: 0;"> PO/Agreement #:
                     <span class="tble-body" id="poagreement">Dt 7/7/17</span>
@@ -167,13 +168,23 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <p class="bank"> Pay through <span id="bankname"></span> Bank</p>
-                                    <p style="margin-bottom:0;"> <span id="accountcompany"></span></p>
-                                    <p style="margin-bottom:0;margin-top:0"><span id="accountaddress1"></span></p>
-                                    <p style="margin-bottom:0;margin-top:0"><span id="accountaddress2"></span></p>
-                                    <p style="margin-bottom:0;margin-top:0"><span id="accountaddress3"></span></p>
-                                   <!--  <p style="margin-bottom:0;margin-top:0">Fremont, CA 94536</p> -->
-                                    <p style="margin-bottom:0;margin-top:0" class="bank-details"><span id="bankName"></span> Bank Acct #
+                                    <p class="bank"> Pay through
+                                        <span id="bankname"></span> Bank</p>
+                                    <p style="margin-bottom:0;">
+                                        <span id="accountcompany"></span>
+                                    </p>
+                                    <p style="margin-bottom:0;margin-top:0">
+                                        <span id="accountaddress1"></span>
+                                    </p>
+                                    <p style="margin-bottom:0;margin-top:0">
+                                        <span id="accountaddress2"></span>
+                                    </p>
+                                    <p style="margin-bottom:0;margin-top:0">
+                                        <span id="accountaddress3"></span>
+                                    </p>
+                                    <!--  <p style="margin-bottom:0;margin-top:0">Fremont, CA 94536</p> -->
+                                    <p style="margin-bottom:0;margin-top:0" class="bank-details">
+                                        <span id="bankName"></span> Bank Acct #
                                         <span id="accountNo"></span>
                                     </p>
                                     <p style="margin-bottom:0;margin-top:0" class="bank-details">ABA #
@@ -187,6 +198,66 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .loader {
+            display: block;
+            position: fixed;
+            z-index: 100;
+            background-image: url('/images/3.gif');
+            background-color:grey;
+            opacity: 0.4;
+            background-repeat: no-repeat;
+            background-position: center;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            top: 0;
+        }
+
+        #loadinggif.show {
+            left: 50%;
+            top: 50%;
+            position: absolute;
+            z-index: 101;
+            width: 32px;
+            height: 32px;
+            margin-left: -16px;
+            margin-top: -16px;
+        }
+
+        div.content {
+            width: 1000px;
+            height: 1000px;
+        }
+
+        /* Safari */
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+
+
+
+    <div class="loader" style="display:none;"></div>
+
+
 </body>
 
 
@@ -257,11 +328,11 @@
                     $('#location').append('<td>' + "$" + totalInvoice + '</td>');
                     $('#location').append('</tr>');
                     var nameOfCompany = cust.accountDetails.companyName.split(",");
-                    
+
                     $('#accountcompany').text(cust.accountDetails.companyName);
-                   // $('#accountaddress1').text(nameOfCompany[1]);
+                    // $('#accountaddress1').text(nameOfCompany[1]);
                     $('#accountaddress2').text(cust.accountDetails.address);
-                   // $('#accountaddress3').text(nameOfCompany[3]);
+                    // $('#accountaddress3').text(nameOfCompany[3]);
                     $('#bankName').text(cust.accountDetails.bankName);
                     $('#accountNo').text(cust.accountDetails.accountNumber);
                     $('#abcno').text(cust.accountDetails.infoNumber);
@@ -285,17 +356,23 @@
 
         var custId = localStorage.getItem("custId");
         var invoiceId = localStorage.getItem("invoiceId");
+        $(".loader").fadeIn(3000);
+
         $.ajax(
             {
                 type: "GET",
                 url: 'http://127.0.0.1:8080/export/' + custId + "/" + invoiceId,
+
                 headers: { "Authorization": localStorage.getItem('token') },
                 xhrFields: {
                     responseType: 'blob'
                 },
                 contentType: "application/json; charset=utf-8",
+
                 success: function (data) {
                     toastr.success("Download started");
+                    $(".loader").fadeOut(10);
+
                     var a = document.createElement('a');
                     var url = window.URL.createObjectURL(data);
                     a.href = url;
@@ -303,7 +380,7 @@
                     a.click();
                     window.URL.revokeObjectURL(url);
 
-                    window.location.href = "viewcustomers.html";
+
                 }
             });
 

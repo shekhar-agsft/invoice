@@ -47,6 +47,7 @@
                                 <th>Customer Name</th>
                                 <th>Address</th>
                                 <th>PO/agreement</th>
+                                <th>Edit</th>
                                 <th>Add</th>
                                 <th>View</th>
 
@@ -70,7 +71,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add Project</h4>
+                    <h4 class="modal-title">Add Customer</h4>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -79,7 +80,7 @@
                             <input type="text" class="form-control" id="CustomerName" placeholder="CustomerName">
                         </div>
                         <div class="form-group">
-                            <label for="address">address</label>
+                            <label for="address">Address</label>
                             <input type="text" class="form-control" id="address" placeholder="address">
                         </div>
                         <div class="form-group">
@@ -89,12 +90,62 @@
 
                         <div class="form-group">
                             <label for="invoiceseries">Invoice Series AGS:</label>
-                            <input type="text" class="form-control" id="invoiceseries" placeholder="For eg 1111">
+                            <input type="text" class="form-control" id="invoiceseries" placeholder="For eg ABC1A111 or AGS112">
                         </div>
 
 
 
                         <a type="buton" onclick="saveCustomer()" class="btn btn-success btn-custom">Submit</a>
+                    </form>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closemodal" class="btn btn-default btn-custom" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!--Edit customer-->
+
+     <!-- Modal -->
+     <div class="modal fade" id="editModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Customer</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="CustomerName">CustomerName</label>
+                            <input type="text" class="form-control" id="cname" placeholder="CustomerName">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" class="form-control" id="caddress" placeholder="address">
+                        </div>
+                        <div class="form-group">
+                            <label for="po">PO/Agreement</label>
+                            <input type="text" class="form-control" id="cpo" placeholder="PO/Agreement">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="invoiceseries">Invoice Series AGS:</label>
+                            <input type="text" class="form-control" id="cinvoiceseries" disabled placeholder="For eg ABC1A111 or AGS112">
+                        </div>
+
+                       <!--  <div class="form-group">
+                          
+                            <input hidden class="form-control" id="cid">
+                        </div>
+ -->
+                        <a type="buton" onclick="editCustomer()" class="btn btn-success btn-custom">Submit</a>
                     </form>
 
 
@@ -200,6 +251,7 @@
                         $('#location').append('<td>' + cust.address + '</td> ');
                         $('#location').append('<td>' + cust.poagreement + '</td> ');
                         // $('#location').append('<td>' + cust.period + '</td> ');
+                        $('#location').append('<td> <button class="btn btn-primary btn-custom"  data-toggle="modal" data-target="#editModal" onclick="getCustomerForUpdate(' + cust.custId + ')">Edit Customer</button> </td> ');
                         $('#location').append('<td> <button class="btn btn-success btn-custom"  data-toggle="modal" data-target="#invoicemodal1" onclick="addInvoice(' + cust.custId + ')">Add Invoice</button> </td> ');
                         $('#location').append('<td><button class="btn btn-info btn-custom" onclick="viewInvoice(' + cust.custId + ')">View Invoice</button></td>')
 
@@ -255,7 +307,7 @@
                     return false;
                 } else {
                     toastr.error(data.response_message);
-                    window.location = "http://127.0.0.1:5500/viewcustomers.html";
+                 
                     return false;
                 }
             },
@@ -266,7 +318,79 @@
 
     }
 
+var custormerIdForUpdate;
+    function getCustomerForUpdate(custId) {
+        custormerIdForUpdate=custId;
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            type: 'GET',
+            url: 'http://127.0.0.1:8080/getSingleCustomer/'+custId,
+            dataType: "json",
+            async: false,
+            headers: { "Authorization": localStorage.getItem('token') },
+            success: function (data) {
+                console.log(JSON.stringify(data.response_body));
 
+                if (data.response_code == 200) {
+                    
+                    toastr.success(data.response_message);
+                    $("#cname").val(data.response_body.customerName);
+                    $("#caddress").val(data.response_body.custAddress);
+                    $("#cpo").val(data.response_body.poagreement);
+                    $("#cinvoiceseries").val(data.response_body.invoiceNumber);
+                  
+                    return false;
+                } else {
+                    toastr.error(data.response_message);
+                 
+                    return false;
+                }
+            },
+            error: function () {
+                toastr.error("error response");
+            }
+        });
+
+    }
+
+ function editCustomer() {
+        var formData = {
+            name: $("#cname").val(),
+            address: $("#caddress").val(),
+            poagreement: $("#cpo").val(),
+            invoiceSeries: $("#cinvoiceseries").val()
+        }
+
+
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            type: 'POST',
+            url: 'http://127.0.0.1:8080/updatecustomer/'+custormerIdForUpdate,
+            dataType: "json",
+            data: JSON.stringify(formData),
+            async: false,
+            headers: { "Authorization": localStorage.getItem('token') },
+            success: function (data) {
+                console.log(JSON.stringify(data.response_body));
+
+                if (data.response_code == 200) {
+                    $("#closemodal").click();
+                    toastr.success(data.response_message);
+
+                    window.location = "http://127.0.0.1:5500/viewcustomers.html";
+                    return false;
+                } else {
+                    toastr.error(data.response_message);
+                 
+                    return false;
+                }
+            },
+            error: function () {
+                window.location = "http://127.0.0.1:5500/home.html"
+            }
+        });
+
+    }
     function getCustomerForInvoice() {
         var custId = localStorage.getItem("custId");
         const monthNames = ["January", "February", "March", "April", "May", "June",

@@ -37,12 +37,15 @@
 
 <body>
     <div class="container">
+     
             <div class="invoice-header">
+          
                     <div class="header-text">
-                        INVOICE <span> <img src="https://agsft.com/wp-content/uploads/2016/03/AGS-logo_trans-copy.png"></img></span>
+                      </img>INVOICE 
                     </div>
 
                 </div>
+                <div><img src="${agileLogo}" style="width:10%"></div>
         <table class="table" style="width:100%">
             <tbody>
             
@@ -130,11 +133,11 @@
             <tbody>
                 <tr>
                     <td>
-                        <p style="font-weight: bold">Pay through Wells Fargo Bank:</p>
-                        <p style="margin-bottom:0;">Agile Soft Systems, Inc</p>
-                        <p style="margin-bottom:0;margin-top:0">38930 Blacow Rd Ste B3</p>
-                        <p style="margin-bottom:0;margin-top:0">Fremont, CA 94536</p>
-                        <p style=" background-color: #DCDCDC	; color:#000;margin-bottom:0;margin-top:0">Wells Fargo Bank Acct # :<span>${accountDetails.accountNumber}</span></p>
+                        <p style="font-weight: bold">Pay through ${accountDetails.bankName} Bank:</p>
+                        <p style="margin-bottom:0;">${accountDetails.companyName}</p>
+                        <p style="margin-bottom:0;margin-top:0">${accountDetails.address}</p>
+                       
+                        <p style=" background-color: #DCDCDC	; color:#000;margin-bottom:0;margin-top:0">${accountDetails.bankName} Bank Acct # :<span>${accountDetails.accountNumber}</span></p>
                         <p style=" background-color: #DCDCDC	; color:#000;margin-bottom:0;margin-top:0">ABA #: <span>${accountDetails.infoNumber}</span></p>
                     </td>
                 </tr>

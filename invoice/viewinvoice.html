@@ -99,7 +99,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="amount">Amount Billed:</label>
+                        <label for="amount">Amount Billed: $</label>
                         <input type="text" class="form-control" style="text-transform:capitalize" id="amount" placeholder="Amount Billed">
                     </div>
 
@@ -176,7 +176,14 @@
                 headers: { "Authorization": localStorage.getItem('token') },
                 success: function (data) {
                     console.log(data.response_body.invoices)
-
+                    /* if (data.response_body.length == 0) {
+                        toastr.success("No Invoice added yet");
+                        window.location = "http://127.0.0.1:5500/viewcustomers.html";
+                    } */
+                    if (!$.isArray(data.response_body) ||!data.response_body.length) {
+                        toastr.info("No Invoice added yet");
+                       
+                    }
                     for (var i = 0; i < data.response_body.length; i++) {
                         var invoice = data.response_body[i].invoice;
                         $('#location').append('<tbody>');
@@ -262,9 +269,8 @@
 
     }
 
-    function viewProject(invoiceId)
-     {
-         localStorage.setItem("invoiceId",invoiceId);
+    function viewProject(invoiceId) {
+        localStorage.setItem("invoiceId", invoiceId);
         window.location = "http://127.0.0.1:5500/invoicetemplate.html"
     }
 
